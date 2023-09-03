@@ -40,7 +40,7 @@ function hideRippleLoader() {
 
 function fetchImages(query, page) {
     showRippleLoader();  // Show ripple loader before starting fetch
-    fetch(`http://uns.vpms.xyz/v1/search?query=${query}&per_page=${itemsPerPage}&page=${page}&orientation=${orient.value}`)
+    fetch(`https://unsplash.com/napi/search/photos?query=${query}&per_page=${itemsPerPage}&page=${page}&orientation=${orient.value}`)
         .then(response => response.json())
         .then(data => {
             displayImages(data);
