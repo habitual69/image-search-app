@@ -21,7 +21,7 @@ This is a demonstration and educational project that allows users to search for 
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/image-search-app.git
+   git clone https://github.com/habitual69/image-search-app.git
    ```
 
 2. **Navigate into the directory**:
