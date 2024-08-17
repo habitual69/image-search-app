@@ -1,45 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Search Engine</title>
-    <!-- Fontawesome and Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/6b0af4bcb3.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.6.0/css/all.css">
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.6.0/css/sharp-duotone-solid.css">
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.6.0/css/sharp-thin.css"> <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.6.0/css/sharp-solid.css" >
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.6.0/css/sharp-regular.css">
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.6.0/css/sharp-light.css">
     <script defer src="./js/script.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        'google-blue': '#4285F4',
-                        'google-red': '#DB4437',
-                        'google-yellow': '#F4B400',
-                        'google-green': '#0F9D58',
+                        'primary': '#3B82F6',
+                        'secondary': '#10B981',
+                        'accent': '#F59E0B',
+                        'dark': '#1F2937',
                     },
-                    boxShadow: {
-                        'soft': '0 4px 6px rgba(0, 0, 0, 0.1)',
-                        'strong': '0 6px 12px rgba(0, 0, 0, 0.15)',
-                    },
-                    backgroundImage: {
-                        'gradient-radial': 'radial-gradient(circle, var(--tw-gradient-stops))',
-                        'gradient-to-b': 'linear-gradient(to bottom, var(--tw-gradient-stops))',
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
                     },
                 },
             },
         };
     </script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+    </style>
 </head>
 
-<body class="font-['Roboto'] bg-gradient-to-b from-gray-100 to-gray-200">
+<body class="font-sans bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
 
     <!-- Header -->
-    <nav class="bg-white bg-opacity-80 backdrop-blur-lg shadow-md fixed top-0 w-full z-50">
-        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 class="text-3xl font-bold text-google-blue">Image<span class="text-google-red">Search</span></h1>
-            <span class="text-sm text-gray-600 italic">Find the best images instantly</span>
+    <nav id="navbar" class="bg-white dark:bg-gray-800 shadow-md fixed top-0 w-full z-50 transition-all duration-300">
+        <div class="container mx-auto px-2 py-2 flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-primary dark:text-white">Image<span class="text-secondary">Search</span></h1>
+            <div class="flex items-center space-x-4">
+                <span class="text-sm text-gray-600 dark:text-gray-300 italic hidden sm:inline-block">Find the best images instantly</span>
+                <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 focus:outline-none">
+                    <i class="fa-thin fa-sun text-yellow-500 dark:hidden"></i>
+                    <i class="fa-thin fa-moon hidden dark:inline-block text-blue-300"></i>
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -47,14 +61,14 @@
     <main class="container mx-auto px-4 py-24">
         <!-- Centralized Search Bar -->
         <div class="mb-12 flex justify-center">
-            <div class="flex w-full max-w-2xl bg-white shadow-soft rounded-full overflow-hidden">
-                <input type="text" id="search-input" placeholder="Search for high-quality images..." class="w-full px-6 py-4 focus:outline-none text-lg">
-                <select id="orientation" class="px-4 py-4 bg-gray-100 border-l focus:outline-none">
-                    <option value="portrait">Portrait</option>
+            <div class="flex w-full max-w-4xl bg-white dark:bg-gray-800 shadow-lg rounded-full overflow-hidden transition-all duration-300">
+                <input type="text" id="search-input" placeholder="Search for high-quality images..." class="w-full px-6 py-4 focus:outline-none text-lg dark:bg-gray-800 dark:text-white transition-colors duration-300">
+                <select id="orientation" class="px-4 py-4 bg-gray-100 dark:bg-gray-700 focus:outline-none dark:text-white transition-colors duration-300">
                     <option value="landscape">Landscape</option>
+                    <option value="portrait">Portrait</option>
                 </select>
-                <button id="search-btn" class="px-6 py-4 bg-google-blue text-white hover:bg-blue-600 focus:outline-none transition duration-300">
-                    <i class="fas fa-search mr-2"></i> Search
+                <button id="search-btn" class="px-6 py-4 bg-primary text-white hover:bg-blue-600 focus:outline-none transition duration-300 transform hover:scale-105">
+                    <i class="fas fa-search mr-2"></i>
                 </button>
             </div>
         </div>
@@ -66,39 +80,85 @@
 
         <!-- Loader -->
         <div id="ripple-loader" class="flex justify-center my-12 hidden">
-            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-google-blue"></div>
-        </div>
-
-        <!-- Pagination Controls -->
-        <div class="flex justify-center items-center space-x-4 mt-12">
-            <button id="prev-page" class="px-4 py-2 bg-google-blue text-white rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 disabled:opacity-50">
-                <i class="fas fa-chevron-left"></i> Previous
-            </button>
-            <span class="text-lg">Page <span id="current-page">1</span> of <span id="total-pages">50</span></span>
-            <button id="next-page" class="px-4 py-2 bg-google-blue text-white rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 disabled:opacity-50">
-                Next <i class="fas fa-chevron-right"></i>
-            </button>
+            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gradient-to-b from-gray-800 to-black text-white mt-12 py-12">
-        <div class="container mx-auto px-6 flex flex-col lg:flex-row justify-between items-center">
-            <h1 class="text-2xl font-bold mb-4 lg:mb-0">Image<span class="text-google-red">Search</span></h1>
-            <div class="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-6">
-                <a href="#" class="text-gray-400 hover:text-white transition duration-300">About Us</a>
-                <a href="#" class="text-gray-400 hover:text-white transition duration-300">Contact</a>
-                <a href="#" class="text-gray-400 hover:text-white transition duration-300">Support</a>
-                <a href="#" class="text-gray-400 hover:text-white transition duration-300">Privacy Policy</a>
+    <footer class="bg-dark text-white mt-12 py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h1 class="text-2xl font-bold mb-4">Image<span class="text-secondary">Search</span></h1>
+                    <p class="text-gray-400">Find and download high-quality images for your projects.</p>
+                </div>
+                <div>
+                    <h2 class="text-lg font-semibold mb-4">Quick Links</h2>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Contact</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h2 class="text-lg font-semibold mb-4">Legal</h2>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Terms of Service</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Copyright Info</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h2 class="text-lg font-semibold mb-4">Connect With Us</h2>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-youtube fa-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400">
+                <p>&copy; 2024 ImageSearch. All rights reserved.</p>
             </div>
         </div>
-        <div class="mt-8 flex justify-center space-x-6">
-            <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-facebook"></i></a>
-            <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-youtube"></i></a>
-        </div>
     </footer>
+
+    <script>
+        // Dark mode toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+
+        // Check for saved theme preference or default to 'light'
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.classList.add(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            const currentTheme = html.classList.contains('dark') ? 'dark' : 'light';
+            localStorage.setItem('theme', currentTheme);
+        });
+
+        // Navbar shrink on scroll
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('py-2');
+                navbar.classList.remove('py-4');
+            } else {
+                navbar.classList.add('py-4');
+                navbar.classList.remove('py-2');
+            }
+        });
+
+        // Infinite scrolling (placeholder - you'll need to implement the actual functionality)
+        window.addEventListener('scroll', () => {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
+                // Load more images here
+                console.log('Load more images');
+            }
+        });
+    </script>
 
 </body>
 </html>
